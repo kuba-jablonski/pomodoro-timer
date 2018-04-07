@@ -4,6 +4,8 @@
   </div>
   <button @click="animate">Start</button>
   <button @click="stop">Stop</button>
+  <input v-model="sessionTimer" type="number">
+  <input v-model="breakTimer" type="number">
 </div>
 
 </template>
@@ -20,32 +22,28 @@ export default {
       secLeft: null,
       circle: null,
       progress: 0,
-      interval: null
-    }
-  },
-  computed: {
-    step () {
-      if (this.activeTimer === 'sessionTimer') {
-        return 1 / this.sessionTimer
-      } else if (this.activeTimer === 'breakTimer') {
-        return 1 / this.breakTimer
-      }
+      interval: null,
+      paused: false,
+      step: null
     }
   },
   methods: {
     animate () {
       if (!this.interval) {
 
-        if (this.activeTimer === 'sessionTimer') {
+        this.step = this.calculateStep()
+
+        if (this.activeTimer === 'sessionTimer' && !this.paused) {
           this.progress = 0
           this.secLeft = this.sessionTimer
           console.log('boop')
-        } else if (this.activeTimer === 'breakTimer') {
+        } else if (this.activeTimer === 'breakTimer' && !this.paused) {
           this.progress = 1
           this.secLeft = this.breakTimer
           console.log('yup')
         }
 
+        this.paused = false
         this.circle.set(this.progress)
 
         this.interval = setInterval(() => {
@@ -56,7 +54,13 @@ export default {
           if (this.secLeft < 0) {
             clearInterval(this.interval)
             this.interval = null
-            this.activeTimer = 'breakTimer'
+            if (this.activeTimer === 'sessionTimer') {
+              this.activeTimer = 'breakTimer'
+              console.log('oooo')
+            } else if (this.activeTimer === 'breakTimer') {
+              this.activeTimer = 'sessionTimer'
+              console.log('uuuu')
+            }
             return this.animate()
           }
 
@@ -70,6 +74,7 @@ export default {
     stop () {
       clearInterval(this.interval)
       this.interval = null
+      this.paused = true
     },
     switchTimers () {
 
@@ -83,6 +88,13 @@ export default {
               value: '5'
           }
       })
+    },
+    calculateStep () {
+      if (this.activeTimer === 'sessionTimer') {
+        return 1 / this.sessionTimer
+      } else if (this.activeTimer === 'breakTimer') {
+        return 1 / this.breakTimer
+      }
     }
   },
   mounted () {
