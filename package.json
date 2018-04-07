@@ -11,6 +11,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "progressbar.js": "^1.0.1",
     "vue": "^2.5.2",
     "vue-overdrive": "0.0.12",
     "vue-router": "^3.0.1"

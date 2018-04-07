@@ -8,7 +8,7 @@
       </h1>
     </div>
     <overdrive id="element" :duration="200">
-      <router-link :style="style" to="/app" tag="a" @click="move" class="btn">Button</router-link>
+      <router-link :style="style" to="/app" tag="a" class="btn">Button</router-link>
     </overdrive>
   </div>
 </template>
