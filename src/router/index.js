@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/views/Home.vue'
-import Timer from '@/views/Timer.vue'
+import Application from '@/views/Application.vue'
 
 Vue.use(Router)
 
@@ -15,7 +15,7 @@ export default new Router({
     {
       path: '/app',
       name: 'Timer',
-      component: Timer
+      component: Application
     }
   ]
 })
