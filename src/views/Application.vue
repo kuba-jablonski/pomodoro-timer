@@ -1,6 +1,7 @@
 <template>
   <overdrive id="element" :duration="200">
-    <div class="about">
+    <div class="app">
+      <AppNav/>
       <Timer/>
     </div>
   </overdrive>
@@ -8,16 +9,18 @@
 
 <script>
 import Timer from '@/components/Timer'
+import AppNav from '@/components/AppNav'
 
 export default {
   components: {
-    Timer
+    Timer,
+    AppNav
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.about {
+.app {
   background-color: red;
   height: 100vh;
   width: 100%;
