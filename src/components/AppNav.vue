@@ -1,8 +1,8 @@
 <template>
   <nav class="nav">
-    <div href="#" class="nav__link">App</div>
-    <div href="#" class="nav__link">Settings</div>
-    <div href="#" class="nav__link">History</div>
+    <router-link to="/app" tag="a" class="nav__link">App</router-link>
+    <router-link to="/app/settings" tag="a" class="nav__link">Settings</router-link>
+    <router-link to="/app/history" tag="a" class="nav__link">History</router-link>
   </nav>
 </template>
 
@@ -26,4 +26,3 @@
   }
 }
 </style>
-
