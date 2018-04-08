@@ -12,6 +12,7 @@
 
 <script>
 export default {
+  name: 'timer',
   mounted () {
     this.$store.commit('DRAW_TIMER', this.$refs.timer)
   }

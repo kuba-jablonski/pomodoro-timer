@@ -7,8 +7,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     activeTimer: 'sessionTimer',
-    sessionTimer: 10,
-    breakTimer: 5,
+    sessionTimer: 1500,
+    breakTimer: 300,
     secLeft: null,
     progressBar: null,
     progress: 0,
@@ -53,6 +53,14 @@ export default new Vuex.Store({
           value: '5'
         }
       })
+    },
+
+    SET_SESSION_DURATION (state, value) {
+      state.sessionTimer = value
+    },
+
+    SET_BREAK_DURATION (state, value) {
+      state.breakTimer = value
     }
   },
 
@@ -61,28 +69,28 @@ export default new Vuex.Store({
       if (!state.interval) {
         commit('CALCULATE_STEP')
         commit('SET_TIMER')
-      }
 
-      state.interval = setInterval(() => {
-        state.progress = state.progress + state.step
-        state.secLeft = state.secLeft - 1
-        state.circle.setText((state.secLeft + 1).toString())
+        state.interval = setInterval(() => {
+          state.progress = state.progress + state.step
+          state.secLeft = state.secLeft - 1
+          state.circle.setText((state.secLeft + 1).toString())
 
-        if (state.secLeft < 0) {
-          clearInterval(state.interval)
-          state.interval = null
-          if (state.activeTimer === 'sessionTimer') {
-            state.activeTimer = 'breakTimer'
-          } else if (state.activeTimer === 'breakTimer') {
-            state.activeTimer = 'sessionTimer'
+          if (state.secLeft < 0) {
+            clearInterval(state.interval)
+            state.interval = null
+            if (state.activeTimer === 'sessionTimer') {
+              state.activeTimer = 'breakTimer'
+            } else if (state.activeTimer === 'breakTimer') {
+              state.activeTimer = 'sessionTimer'
+            }
+            return dispatch('animateTimer')
           }
-          return dispatch('animateTimer')
-        }
 
-        state.circle.animate(state.progress, {
-          duration: 1000
-        })
-      }, 1000)
+          state.circle.animate(state.progress, {
+            duration: 1000
+          })
+        }, 1000)
+      }
     }
 
   }

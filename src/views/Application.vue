@@ -2,7 +2,9 @@
   <overdrive id="element" :duration="200">
     <div class="app">
       <AppNav/>
-      <router-view/>
+      <keep-alive include="timer">
+        <router-view/>
+      </keep-alive>
     </div>
   </overdrive>
 </template>

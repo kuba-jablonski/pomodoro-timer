@@ -17,12 +17,11 @@ export default new Router({
     },
     {
       path: '/app',
-      name: 'application',
       component: Application,
       children: [
         {
           path: '',
-          name: 'timer',
+          name: 'application',
           component: Timer
         },
         {
