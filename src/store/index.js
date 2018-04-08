@@ -4,6 +4,21 @@ import ProgressBar from 'progressbar.js'
 
 Vue.use(Vuex)
 
+function convertSecsToTimerString (secs) {
+  const min = Math.floor(secs / 60)
+  const sec = secs % 60
+  
+  let secString
+  
+  if (sec < 10) {
+    secString = '0' + sec
+  } else {
+    secString = sec
+  }
+  
+  return `${min}:${secString}`
+}
+
 export default new Vuex.Store({
   state: {
     activeTimer: 'sessionTimer',
@@ -26,7 +41,7 @@ export default new Vuex.Store({
       }
     },
 
-    SET_TIMER (state) {
+    SET_TIMER (state) { // !!! rename to TOGGLE_TIMER? ot ACTIVATE_TIMER
       if (state.activeTimer === 'sessionTimer' && !state.paused) {
         state.progress = 0
         state.secLeft = state.sessionTimer
@@ -36,6 +51,12 @@ export default new Vuex.Store({
       }
       state.paused = false
       state.circle.set(state.progress)
+    },
+
+    DESTROY_TIMER (state) {
+      state.circle.destroy()
+      clearInterval(state.interval)
+      state.interval = null
     },
 
     PAUSE_TIMER (state) {
@@ -50,7 +71,7 @@ export default new Vuex.Store({
         strokeWidth: 3,
         trailWidth: 1,
         text: {
-          value: '5'
+          value: convertSecsToTimerString(state.sessionTimer)
         }
       })
     },
@@ -65,6 +86,7 @@ export default new Vuex.Store({
   },
 
   actions: {
+    // SHOULD NOT MANIPULATE STATE
     animateTimer ({ commit, state, dispatch }) {
       if (!state.interval) {
         commit('CALCULATE_STEP')
@@ -73,7 +95,7 @@ export default new Vuex.Store({
         state.interval = setInterval(() => {
           state.progress = state.progress + state.step
           state.secLeft = state.secLeft - 1
-          state.circle.setText((state.secLeft + 1).toString())
+          state.circle.setText(convertSecsToTimerString(state.secLeft + 1))
 
           if (state.secLeft < 0) {
             clearInterval(state.interval)
@@ -91,6 +113,11 @@ export default new Vuex.Store({
           })
         }, 1000)
       }
+    },
+
+    resetTimer ({ commit }, element) {
+      commit('DESTROY_TIMER')
+      commit('DRAW_TIMER', element)
     }
 
   }
