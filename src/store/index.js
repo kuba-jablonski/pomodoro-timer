@@ -7,30 +7,31 @@ Vue.use(Vuex)
 function convertSecsToTimerString (secs) {
   const min = Math.floor(secs / 60)
   const sec = secs % 60
-  
+
   let secString
-  
+
   if (sec < 10) {
     secString = '0' + sec
   } else {
     secString = sec
   }
-  
+
   return `${min}:${secString}`
 }
 
 export default new Vuex.Store({
   state: {
     activeTimer: 'sessionTimer',
-    sessionTimer: 1500,  //1500 = 25min
-    breakTimer: 300,  // 300 = 5 min
+    sessionTimer: 1500, // 1500 = 25min
+    breakTimer: 300, // 300 = 5 min
     secLeft: null,
     circle: null,
     progressBar: null,
     progress: 0,
     interval: null,
-    paused: false,
-    step: null
+    paused: null, // null is fresh timer
+    step: null,
+    canvasContainer: null
   },
 
   mutations: {
@@ -46,18 +47,12 @@ export default new Vuex.Store({
       state.progress = value
     },
 
-    DESTROY_TIMER (state) {
-      state.circle.destroy()
-      clearInterval(state.interval)
-      state.interval = null
+    SET_PAUSE_STATE (state, value) {
+      state.paused = value
     },
 
-    SET_PAUSE_STATE (state, bool) {
-      state.paused = bool
-    },
-
-    DRAW_TIMER (state, element) {
-      state.circle = new ProgressBar.Circle(element, {
+    DRAW_TIMER (state) {
+      state.circle = new ProgressBar.Circle(state.canvasContainer, {
         color: '#fff',
         trailColor: 'rgba(0,0,0, .1)',
         strokeWidth: 3,
@@ -72,11 +67,10 @@ export default new Vuex.Store({
             padding: 0,
             margin: 0,
             transform: {
-                prefix: true,
-                value: 'translate(-50%, -50%)'
+              prefix: true,
+              value: 'translate(-50%, -50%)'
             }
-        },
-
+          }
         }
       })
       state.circle.set(state.progress)
@@ -102,12 +96,16 @@ export default new Vuex.Store({
         state.interval = value
       } else {
         clearInterval(state.interval)
-        state.interval = null        
+        state.interval = null
       }
     },
 
     SET_ACTIVE_TIMER (state, value) {
       state.activeTimer = value
+    },
+
+    SET_CANVAS_CONTAINER (state, element) {
+      state.canvasContainer = element
     }
   },
 
@@ -139,9 +137,12 @@ export default new Vuex.Store({
       }
     },
 
-    resetTimer ({ commit }, element) {
-      commit('DESTROY_TIMER')
-      commit('DRAW_TIMER', element)
+    resetTimer ({ commit, state }) {
+      state.circle.destroy()
+      commit('SET_INTERVAL', null)
+      commit('SET_PROGRESS', 0)
+      commit('SET_PAUSE_STATE', null)
+      commit('DRAW_TIMER')
     },
 
     activateTimer ({ commit, state }) {

@@ -1,21 +1,21 @@
 <template>
-<div>
-  <div class="timer" ref="timer">
+  <div>
+    <div class="timer" ref="timer"/>
+    <timer-controls/>
   </div>
-  <button @click="$store.dispatch('animateTimer')">Start</button>
-  <button @click="$store.dispatch('pauseTimer')">Stop</button>
-  <button @click="$store.dispatch('resetTimer', $refs.timer)">Reset</button>
-  <!-- <input v-model="sessionTimer" type="number"> -->
-  <!-- <input v-model="breakTimer" type="number"> -->
-</div>
-
 </template>
 
 <script>
+import TimerControls from './TimerControls'
+
 export default {
   name: 'timer',
+  components: {
+    TimerControls
+  },
   mounted () {
-    this.$store.commit('DRAW_TIMER', this.$refs.timer)
+    this.$store.commit('SET_CANVAS_CONTAINER', this.$refs.timer)
+    this.$store.commit('DRAW_TIMER')
   }
 }
 </script>
@@ -23,7 +23,7 @@ export default {
 <style lang="scss" scoped>
 .timer {
   max-width: 35rem;
-  margin: 0 auto;
+  // margin: 0 auto;
   background-color: transparent;
 }
 </style>

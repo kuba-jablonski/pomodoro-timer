@@ -23,7 +23,7 @@ export default {
 
 <style lang="scss" scoped>
 .app {
-  background-color: red;
+  background-color: $color-primary;
   height: 100vh;
   width: 100%;
 }
