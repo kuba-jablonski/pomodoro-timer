@@ -22,8 +22,8 @@ export default {
 
 <style lang="scss" scoped>
 .timer {
-  width: 20rem;
-  height: 20rem;
-  background-color: black;
+  max-width: 35rem;
+  margin: 0 auto;
+  background-color: transparent;
 }
 </style>

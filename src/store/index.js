@@ -58,11 +58,25 @@ export default new Vuex.Store({
 
     DRAW_TIMER (state, element) {
       state.circle = new ProgressBar.Circle(element, {
-        color: '#FCB03C',
+        color: '#fff',
+        trailColor: 'rgba(0,0,0, .1)',
         strokeWidth: 3,
-        trailWidth: 1,
+        trailWidth: 3,
         text: {
-          value: convertSecsToTimerString(state.sessionTimer)
+          value: convertSecsToTimerString(state.sessionTimer),
+          style: {
+            fontSize: '6rem',
+            position: 'absolute',
+            left: '50%',
+            top: '50%',
+            padding: 0,
+            margin: 0,
+            transform: {
+                prefix: true,
+                value: 'translate(-50%, -50%)'
+            }
+        },
+
         }
       })
       state.circle.set(state.progress)
