@@ -6,6 +6,10 @@
 
 <style lang="scss" scoped>
 .round-btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+
   height: 7rem;
   width: 7rem;
   border-radius: 50%;
