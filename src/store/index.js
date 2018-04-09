@@ -22,9 +22,10 @@ function convertSecsToTimerString (secs) {
 export default new Vuex.Store({
   state: {
     activeTimer: 'sessionTimer',
-    sessionTimer: 1500,
-    breakTimer: 300,
+    sessionTimer: 1500,  //1500 = 25min
+    breakTimer: 300,  // 300 = 5 min
     secLeft: null,
+    circle: null,
     progressBar: null,
     progress: 0,
     interval: null,
@@ -41,16 +42,8 @@ export default new Vuex.Store({
       }
     },
 
-    SET_TIMER (state) { // !!! rename to TOGGLE_TIMER? ot ACTIVATE_TIMER
-      if (state.activeTimer === 'sessionTimer' && !state.paused) {
-        state.progress = 0
-        state.secLeft = state.sessionTimer
-      } else if (state.activeTimer === 'breakTimer' && !state.paused) {
-        state.progress = 1
-        state.secLeft = state.breakTimer
-      }
-      state.paused = false
-      state.circle.set(state.progress)
+    SET_PROGRESS (state, value) {
+      state.progress = value
     },
 
     DESTROY_TIMER (state) {
@@ -59,10 +52,8 @@ export default new Vuex.Store({
       state.interval = null
     },
 
-    PAUSE_TIMER (state) {
-      clearInterval(state.interval)
-      state.interval = null
-      state.paused = true
+    SET_PAUSE_STATE (state, bool) {
+      state.paused = bool
     },
 
     DRAW_TIMER (state, element) {
@@ -74,6 +65,10 @@ export default new Vuex.Store({
           value: convertSecsToTimerString(state.sessionTimer)
         }
       })
+      state.circle.set(state.progress)
+      if (state.interval) {
+        state.circle.setText(convertSecsToTimerString(state.secLeft + 1))
+      }
     },
 
     SET_SESSION_DURATION (state, value) {
@@ -82,28 +77,43 @@ export default new Vuex.Store({
 
     SET_BREAK_DURATION (state, value) {
       state.breakTimer = value
+    },
+
+    SET_TIME_LEFT (state, value) {
+      state.secLeft = value
+    },
+
+    SET_INTERVAL (state, value) {
+      if (value) {
+        state.interval = value
+      } else {
+        clearInterval(state.interval)
+        state.interval = null        
+      }
+    },
+
+    SET_ACTIVE_TIMER (state, value) {
+      state.activeTimer = value
     }
   },
 
   actions: {
-    // SHOULD NOT MANIPULATE STATE
     animateTimer ({ commit, state, dispatch }) {
       if (!state.interval) {
         commit('CALCULATE_STEP')
-        commit('SET_TIMER')
+        dispatch('activateTimer')
 
-        state.interval = setInterval(() => {
-          state.progress = state.progress + state.step
-          state.secLeft = state.secLeft - 1
+        commit('SET_INTERVAL', setInterval(() => {
+          commit('SET_PROGRESS', state.progress + state.step)
+          commit('SET_TIME_LEFT', state.secLeft - 1)
           state.circle.setText(convertSecsToTimerString(state.secLeft + 1))
 
           if (state.secLeft < 0) {
-            clearInterval(state.interval)
-            state.interval = null
+            commit('SET_INTERVAL', null)
             if (state.activeTimer === 'sessionTimer') {
-              state.activeTimer = 'breakTimer'
+              commit('SET_ACTIVE_TIMER', 'breakTimer')
             } else if (state.activeTimer === 'breakTimer') {
-              state.activeTimer = 'sessionTimer'
+              commit('SET_ACTIVE_TIMER', 'sessionTimer')
             }
             return dispatch('animateTimer')
           }
@@ -111,14 +121,30 @@ export default new Vuex.Store({
           state.circle.animate(state.progress, {
             duration: 1000
           })
-        }, 1000)
+        }, 1000))
       }
     },
 
     resetTimer ({ commit }, element) {
       commit('DESTROY_TIMER')
       commit('DRAW_TIMER', element)
-    }
+    },
 
+    activateTimer ({ commit, state }) {
+      if (state.activeTimer === 'sessionTimer' && !state.paused) {
+        commit('SET_PROGRESS', 0)
+        commit('SET_TIME_LEFT', state.sessionTimer)
+      } else if (state.activeTimer === 'breakTimer' && !state.paused) {
+        commit('SET_PROGRESS', 1)
+        commit('SET_TIME_LEFT', state.breakTimer)
+      }
+      commit('SET_PAUSE_STATE', false)
+      state.circle.set(state.progress)
+    },
+
+    pauseTimer ({ commit }) {
+      commit('SET_INTERVAL', null)
+      commit('SET_PAUSE_STATE', true)
+    }
   }
 })

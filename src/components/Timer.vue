@@ -3,7 +3,7 @@
   <div class="timer" ref="timer">
   </div>
   <button @click="$store.dispatch('animateTimer')">Start</button>
-  <button @click="$store.commit('PAUSE_TIMER')">Stop</button>
+  <button @click="$store.dispatch('pauseTimer')">Stop</button>
   <button @click="$store.dispatch('resetTimer', $refs.timer)">Reset</button>
   <!-- <input v-model="sessionTimer" type="number"> -->
   <!-- <input v-model="breakTimer" type="number"> -->
