@@ -22,9 +22,9 @@ export default {
 .history {
   display: flex;
   width: 100%;
-  height: 100%;
+  height: 5rem;
   justify-content: space-around;
-  margin-top: auto;
+  align-items: center; 
 }
 
 .circle {

@@ -1,5 +1,5 @@
 <template>
-  <div class="timer">
+  <div class="timer" :class="{'timer--landscape': landscape}">
     <div class="progress">
       <div class="progress__canvas" ref="progress"/>
     </div>
@@ -18,9 +18,28 @@ export default {
     TimerControls,
     TimerHistory
   },
+  data () {
+    return {
+      landscape: false
+    }
+  },
+  methods: {
+    checkOrientation () {
+      if (window.innerWidth > window.innerHeight) {
+        this.landscape = true
+      } else {
+        this.landscape = false
+      }
+    }
+  },
   mounted () {
     this.$store.commit('SET_CANVAS_CONTAINER', this.$refs.progress)
     this.$store.commit('DRAW_TIMER')
+    this.checkOrientation()
+    window.addEventListener('resize', this.checkOrientation)
+  },
+  destroyed () {
+    window.removeEventListener('resize', this.checkOrientation)
   }
 }
 </script>
@@ -29,9 +48,11 @@ export default {
 .timer {
   height: 100%;
   display: grid;
-  grid-template-rows: min-content min-content 4rem;
-  align-content: space-between;
+  grid-template-rows: min-content min-content 1fr;
+  grid-row-gap: 2rem;
   justify-items: center;
+  align-items: end;
+  padding-top: 3rem;
 }
 
 .progress {
@@ -40,15 +61,17 @@ export default {
   background-color: transparent;
 }
 
-// .timer--landscape {
-//   display: grid;
-//   grid-template-columns: 1fr 1fr;
-//   grid-template-rows: 1fr 1fr;
-//   justify-items: center;
-//   align-items: center;
+.timer--landscape {
+  padding-top: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  justify-items: center;
+  align-items: center;
 
-//   .progress {
-//     grid-row: 1 / -1;
-//   }
-// }
+  .progress {
+    grid-row: 1 / -1;
+    width: 80%;
+  }
+}
 </style>
