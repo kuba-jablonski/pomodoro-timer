@@ -1,7 +1,9 @@
 <template>
-  <div v-if="!isFreshTimer" class="history">
-    <div v-for="(elem, index) in pomodoroHistory" :key=index class="circle" :class="{'circle--full': elem}"></div>
-  </div>
+  <transition name="slide">
+    <div v-if="!isFreshTimer" class="history">
+      <div v-for="(elem, index) in pomodoroHistory" :key="index" class="circle" :class="{'circle--full': elem}"></div>
+    </div>
+  </transition>
 </template>
 
 <script>
@@ -35,5 +37,13 @@ export default {
   &--full {
     background-color: #fff;
   }
+}
+
+.slide-enter-active, .slide-leave-active {
+  transition: all .3s ease-out;
+}
+.slide-enter, .slide-leave-to {
+  transform: translateY(4rem);
+  opacity: 0;
 }
 </style>
