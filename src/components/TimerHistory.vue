@@ -22,7 +22,7 @@ export default {
 .history {
   display: flex;
   width: 100%;
-  height: 5rem;
+  height: 100%;
   justify-content: space-around;
   margin-top: auto;
 }

@@ -29,5 +29,6 @@ export default {
 
   display: grid;
   grid-template-rows: 5rem 1fr;
+  grid-gap: 3rem;
 }
 </style>
