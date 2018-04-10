@@ -1,6 +1,8 @@
 <template>
-  <div>
-    <div class="timer" ref="timer"/>
+  <div class="timer">
+    <div class="progress">
+      <div class="progress__canvas" ref="progress"/>
+    </div>
     <timer-controls/>
     <timer-history/>
   </div>
@@ -17,7 +19,7 @@ export default {
     TimerHistory
   },
   mounted () {
-    this.$store.commit('SET_CANVAS_CONTAINER', this.$refs.timer)
+    this.$store.commit('SET_CANVAS_CONTAINER', this.$refs.progress)
     this.$store.commit('DRAW_TIMER')
   }
 }
@@ -25,8 +27,16 @@ export default {
 
 <style lang="scss" scoped>
 .timer {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.progress {
   max-width: 35rem;
-  // margin: 0 auto;
+  width: 100%;
+  padding: 3rem;
   background-color: transparent;
 }
 </style>

@@ -26,5 +26,8 @@ export default {
   background-color: $color-primary;
   height: 100vh;
   width: 100%;
+
+  display: grid;
+  grid-template-rows: 5rem 1fr;
 }
 </style>

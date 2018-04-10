@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="timer-controls">
     <base-round-button v-if="paused === null || paused === true" @click.native="$store.dispatch('animateTimer')">
       <svg class="icon">
         <use xlink:href="/static/sprite.svg#icon-play3"></use>
@@ -34,6 +34,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.timer-controls {
+  width: 100%;
+  display: grid;
+  grid-template-columns: min-content min-content;
+  grid-column-gap: 3rem;
+  justify-content: center;
+}
+
 .icon {
   height: 2.7rem;
   width: 2.7rem;

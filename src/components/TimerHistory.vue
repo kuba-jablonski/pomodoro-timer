@@ -21,7 +21,10 @@ export default {
 <style lang="scss" scoped>
 .history {
   display: flex;
+  width: 100%;
+  height: 5rem;
   justify-content: space-around;
+  margin-top: auto;
 }
 
 .circle {
