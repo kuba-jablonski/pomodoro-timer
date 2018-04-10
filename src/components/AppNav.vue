@@ -8,12 +8,12 @@
     <router-link to="/app/settings" tag="a" class="nav__link">
       <svg class="nav__icon">
         <use xlink:href="/static/sprite.svg#icon-cog"></use>
-      </svg>      
+      </svg>
     </router-link>
     <router-link to="/app/history" tag="a" class="nav__link">
       <svg class="nav__icon">
         <use xlink:href="/static/sprite.svg#icon-history"></use>
-      </svg>        
+      </svg>
     </router-link>
   </nav>
 </template>
@@ -40,6 +40,12 @@
   &__icon {
     height: 3rem;
     width: 3rem;
+    fill: rgba(#000, .1);
+  }
+}
+
+.router-link-exact-active {
+  .nav__icon {
     fill: #fff;
   }
 }

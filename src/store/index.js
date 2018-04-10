@@ -137,7 +137,7 @@ export default new Vuex.Store({
             } else if (state.activeTimer === 'breakTimer') {
               commit('SET_ACTIVE_TIMER', 'sessionTimer')
             }
-            
+
             return dispatch('animateTimer')
           }
 
@@ -186,7 +186,7 @@ export default new Vuex.Store({
           arr.push(true)
         }
       }
-    
+
       return arr
     },
 
