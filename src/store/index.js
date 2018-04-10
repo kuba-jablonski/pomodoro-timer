@@ -22,16 +22,17 @@ function convertSecsToTimerString (secs) {
 export default new Vuex.Store({
   state: {
     activeTimer: 'sessionTimer',
-    sessionTimer: 1500, // 1500 = 25min
-    breakTimer: 300, // 300 = 5 min
+    sessionTimer: 5, // 1500 = 25min
+    breakTimer: 3, // 300 = 5 min
     secLeft: null,
     circle: null,
-    progressBar: null,
+    // progressBar: null,
     progress: 0,
     interval: null,
     paused: null, // null is fresh timer
     step: null,
-    canvasContainer: null
+    canvasContainer: null,
+    pomodoroCount: 4
   },
 
   mutations: {
@@ -106,11 +107,19 @@ export default new Vuex.Store({
 
     SET_CANVAS_CONTAINER (state, element) {
       state.canvasContainer = element
+    },
+
+    SET_POMODORO_COUNT (state, value) {
+      state.pomodoroCount = value
     }
   },
 
   actions: {
     animateTimer ({ commit, state, dispatch }) {
+      if (state.pomodoroCount === 0) {
+        return dispatch('resetTimer')
+      }
+
       if (!state.interval) {
         commit('CALCULATE_STEP')
         dispatch('activateTimer')
@@ -123,10 +132,12 @@ export default new Vuex.Store({
           if (state.secLeft < 0) {
             commit('SET_INTERVAL', null)
             if (state.activeTimer === 'sessionTimer') {
+              commit('SET_POMODORO_COUNT', state.pomodoroCount - 1)
               commit('SET_ACTIVE_TIMER', 'breakTimer')
             } else if (state.activeTimer === 'breakTimer') {
               commit('SET_ACTIVE_TIMER', 'sessionTimer')
             }
+            
             return dispatch('animateTimer')
           }
 
@@ -142,6 +153,8 @@ export default new Vuex.Store({
       commit('SET_INTERVAL', null)
       commit('SET_PROGRESS', 0)
       commit('SET_PAUSE_STATE', null)
+      commit('SET_POMODORO_COUNT', 4)
+      commit('SET_ACTIVE_TIMER', 'sessionTimer')
       commit('DRAW_TIMER')
     },
 
@@ -161,5 +174,26 @@ export default new Vuex.Store({
       commit('SET_INTERVAL', null)
       commit('SET_PAUSE_STATE', true)
     }
+  },
+
+  getters: {
+    pomodoroHistory (state) {
+      let arr = []
+      for (let i = 4; i > 0; i--) {
+        if (state.pomodoroCount - i >= 0) {
+          arr.push(false)
+        } else {
+          arr.push(true)
+        }
+      }
+    
+      return arr
+    },
+
+    isFreshTimer (state) {
+      return state.paused === null
+    }
+
   }
+
 })
