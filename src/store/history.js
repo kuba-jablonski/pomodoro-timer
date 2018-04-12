@@ -1,6 +1,6 @@
 export default {
   state: {
-    task: 'Placeholder',
+    task: 'Set task...',
     startTime: null,
     endTime: null,
     currentPomodoro: [],
@@ -8,6 +8,10 @@ export default {
   },
 
   mutations: {
+    SET_TASK (state, value) {
+      state.task = value
+    },
+
     SET_START_TIME (state, value) {
       state.startTime = value
     },

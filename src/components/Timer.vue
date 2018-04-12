@@ -1,5 +1,6 @@
 <template>
   <div class="timer" :class="{'timer--landscape': landscape}">
+    <timer-input/>
     <div class="progress">
       <div class="progress__canvas" ref="progress"/>
     </div>
@@ -11,12 +12,14 @@
 <script>
 import TimerControls from './TimerControls'
 import TimerHistory from './TimerHistory'
+import TimerInput from './TimerInput'
 
 export default {
   name: 'timer',
   components: {
     TimerControls,
-    TimerHistory
+    TimerHistory,
+    TimerInput
   },
   data () {
     return {
@@ -48,7 +51,7 @@ export default {
 .timer {
   height: 100%;
   display: grid;
-  grid-template-rows: min-content min-content 1fr;
+  grid-template-rows: min-content min-content min-content 1fr;
   grid-row-gap: 2rem;
   justify-items: center;
   align-items: end;
@@ -65,7 +68,7 @@ export default {
   padding-top: 0;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
   justify-items: center;
   align-items: center;
 

@@ -185,7 +185,7 @@ export default new Vuex.Store({
         commit('SET_TIME_LEFT', state.breakTimer)
       } else if (state.activeTimer === 'longBreakTimer' && !state.paused) {
         commit('SET_PROGRESS', 1)
-        commit('SET_TIME_LEFT', state.longBreakTimer)        
+        commit('SET_TIME_LEFT', state.longBreakTimer)
       }
       commit('SET_PAUSE_STATE', false)
       state.circle.set(state.progress)
