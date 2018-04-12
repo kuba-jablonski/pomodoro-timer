@@ -183,7 +183,7 @@ export default new Vuex.Store({
       } else if (state.activeTimer === 'breakTimer' && !state.paused) {
         commit('SET_PROGRESS', 1)
         commit('SET_TIME_LEFT', state.breakTimer)
-      } else {
+      } else if (state.activeTimer === 'longBreakTimer' && !state.paused) {
         commit('SET_PROGRESS', 1)
         commit('SET_TIME_LEFT', state.longBreakTimer)        
       }
