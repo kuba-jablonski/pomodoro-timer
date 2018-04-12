@@ -91,6 +91,10 @@ export default new Vuex.Store({
       state.breakTimer = value
     },
 
+    SET_LONG_BREAK_DURATION (state, value) {
+      state.longBreakTimer = value
+    },
+
     SET_TIME_LEFT (state, value) {
       state.secLeft = value
     },
