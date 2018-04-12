@@ -23,8 +23,9 @@ function convertSecsToTimerString (secs) {
 export default new Vuex.Store({
   state: {
     activeTimer: 'sessionTimer',
-    sessionTimer: 5, // 1500 = 25min
-    breakTimer: 3, // 300 = 5 min
+    sessionTimer: 2, // 1500 = 25min
+    breakTimer: 1, // 300 = 5 min
+    longBreakTimer: 10,
     secLeft: null,
     circle: null,
     progress: 0,
@@ -41,6 +42,8 @@ export default new Vuex.Store({
         state.step = 1 / state.sessionTimer
       } else if (state.activeTimer === 'breakTimer') {
         state.step = 1 / state.breakTimer
+      } else {
+        state.step = 1 / state.longBreakTimer
       }
     },
 
@@ -116,7 +119,7 @@ export default new Vuex.Store({
 
   actions: {
     animateTimer ({ commit, state, dispatch }) {
-      if (state.pomodoroCount === 0) {
+      if (state.pomodoroCount === 0 && state.activeTimer === 'sessionTimer') {
         return dispatch('resetTimer')
       }
 
@@ -137,9 +140,13 @@ export default new Vuex.Store({
             if (state.activeTimer === 'sessionTimer') {
               commit('SET_END_TIME', Date.now())
               commit('SET_POMODORO_COUNT', state.pomodoroCount - 1)
-              commit('SET_ACTIVE_TIMER', 'breakTimer')
+              if (state.pomodoroCount > 0) {
+                commit('SET_ACTIVE_TIMER', 'breakTimer')
+              } else {
+                commit('SET_ACTIVE_TIMER', 'longBreakTimer')
+              }
               commit('ADD_TO_POMODORO_HISTORY')
-            } else if (state.activeTimer === 'breakTimer') {
+            } else if (state.activeTimer === 'breakTimer' || state.activeTimer === 'longBreakTimer') {
               commit('SET_ACTIVE_TIMER', 'sessionTimer')
             }
 
@@ -172,6 +179,9 @@ export default new Vuex.Store({
       } else if (state.activeTimer === 'breakTimer' && !state.paused) {
         commit('SET_PROGRESS', 1)
         commit('SET_TIME_LEFT', state.breakTimer)
+      } else {
+        commit('SET_PROGRESS', 1)
+        commit('SET_TIME_LEFT', state.longBreakTimer)        
       }
       commit('SET_PAUSE_STATE', false)
       state.circle.set(state.progress)
