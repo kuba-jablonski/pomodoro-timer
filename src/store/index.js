@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import history from './history'
 import ProgressBar from 'progressbar.js'
 
 Vue.use(Vuex)
@@ -26,7 +27,6 @@ export default new Vuex.Store({
     breakTimer: 3, // 300 = 5 min
     secLeft: null,
     circle: null,
-    // progressBar: null,
     progress: 0,
     interval: null,
     paused: null, // null is fresh timer
@@ -121,6 +121,9 @@ export default new Vuex.Store({
       }
 
       if (!state.interval) {
+        if (state.activeTimer === 'sessionTimer') {
+          commit('SET_START_TIME', Date.now())
+        }
         commit('CALCULATE_STEP')
         dispatch('activateTimer')
 
@@ -132,8 +135,10 @@ export default new Vuex.Store({
           if (state.secLeft < 0) {
             commit('SET_INTERVAL', null)
             if (state.activeTimer === 'sessionTimer') {
+              commit('SET_END_TIME', Date.now())
               commit('SET_POMODORO_COUNT', state.pomodoroCount - 1)
               commit('SET_ACTIVE_TIMER', 'breakTimer')
+              commit('ADD_TO_POMODORO_HISTORY')
             } else if (state.activeTimer === 'breakTimer') {
               commit('SET_ACTIVE_TIMER', 'sessionTimer')
             }
@@ -150,6 +155,8 @@ export default new Vuex.Store({
 
     resetTimer ({ commit, state }) {
       state.circle.destroy()
+      commit('ADD_POMODORO_TO_FULL_HISTORY')
+      commit('RESET_CURRENT_POMODORO_HISTORY')
       commit('SET_INTERVAL', null)
       commit('SET_PROGRESS', 0)
       commit('SET_PAUSE_STATE', null)
@@ -194,6 +201,10 @@ export default new Vuex.Store({
       return state.paused === null
     }
 
+  },
+
+  modules: {
+    history
   }
 
 })
